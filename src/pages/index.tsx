@@ -3,6 +3,23 @@ import { useListen } from "@/hooks/useListen";
 import { useMetamask } from "@/hooks/useMetamask";
 import Wallet from "@/components/Wallet";
 
+interface ActionConfirmModal {
+    action: "edit" | "delete" | "create";
+    id: string;
+    name: string;
+    address: string;
+    health: number;
+    strength: number;
+}
+
+interface ModalProps {
+    data: ActionConfirmModal;
+    title: string;
+    message: string;
+    onCancel: () => void;
+    onConfirm: (params: ActionConfirmModal) => void;
+}
+
 type Player = {
     id: string;
     name: string;
@@ -16,6 +33,7 @@ const HomePage = () => {
     const { dispatch } = useMetamask();
 
     const [players, setPlayers] = useState<Player[]>([]);
+    const [showModal, setShowModal] = useState<ActionConfirmModal | null>(null);
 
     useEffect(() => {
         const dataPlayers = localStorage.getItem("data-players");
@@ -87,6 +105,20 @@ const HomePage = () => {
             });
         }
     }, []);
+
+    const handleActionPlayer = (data: ActionConfirmModal) => {
+        let updatedPlayers = [...players];
+        const { action, ...dataAction } = data;
+
+        if (action === "delete") {
+            updatedPlayers = players.filter((player) => player.id !== data.id);
+        }
+
+        setShowModal(null);
+        setPlayers(updatedPlayers);
+        localStorage.setItem("data-players", JSON.stringify(updatedPlayers));
+    };
+
     return (
         <div className="py-10">
             <Wallet>
@@ -140,6 +172,17 @@ const HomePage = () => {
                                             {player.strength}
                                         </td>
                                         <td className="px-4 py-2 text-center">
+                                            <button
+                                                className="bg-red-500 text-white px-3 py-1 rounded-md hover:bg-red-600 ml-2"
+                                                onClick={() =>
+                                                    setShowModal({
+                                                        action: "delete",
+                                                        ...player,
+                                                    })
+                                                }
+                                            >
+                                                Xóa
+                                            </button>
                                         </td>
                                     </tr>
                                 ))}
@@ -147,9 +190,73 @@ const HomePage = () => {
                         </table>
                     </div>
                 </div>
+                {showModal?.action === "delete" && (
+                    <Modal
+                        data={showModal}
+                        title="Xóa Player"
+                        onConfirm={handleActionPlayer}
+                        onCancel={() => setShowModal(null)}
+                        message={`Bạn muốn xóa player "${showModal?.name}"?`}
+                    />
+                )}
             </Wallet>
         </div>
     );
 };
 
 export default HomePage;
+
+
+const Modal: React.FC<ModalProps> = ({
+    data,
+    title,
+    message,
+    onConfirm,
+    onCancel,
+}) => {
+    const [name, setName] = useState<string>("");
+    const [address, setAddress] = useState<string>("");
+    const [health, setHealth] = useState<number>(0);
+    const [strength, setStrength] = useState<number>(0);
+
+    useEffect(() => {
+        if (data?.action === "edit") {
+            setName(data?.name || "");
+            setAddress(data?.address || "");
+            setHealth(data?.health || 0);
+            setStrength(data?.strength || 0);
+        }
+    }, []);
+
+    return (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
+            <div className="bg-white p-4 rounded w-[500px]">
+                <h2 className="text-xl font-bold">{title}</h2>
+                <p>{message}</p>
+
+                <div className="mt-2 flex justify-end">
+                    <button
+                        onClick={onCancel}
+                        className="bg-gray-500 text-white p-2 rounded mr-2"
+                    >
+                        Hủy
+                    </button>
+                    <button
+                        onClick={() =>
+                            onConfirm({
+                                ...data,
+                                name,
+                                address,
+                                health,
+                                strength,
+                            })
+                        }
+                        className="bg-blue-500 text-white p-2 rounded"
+                    >
+                        {data?.action === "edit" ? "Lưu" : "Xóa"}
+                    </button>
+                </div>
+            </div>
+        </div>
+    );
+};
