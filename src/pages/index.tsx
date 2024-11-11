@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import { useListen } from "@/hooks/useListen";
 import { useMetamask } from "@/hooks/useMetamask";
 import Wallet from "@/components/Wallet";
@@ -34,6 +34,12 @@ const HomePage = () => {
 
     const [players, setPlayers] = useState<Player[]>([]);
     const [showModal, setShowModal] = useState<ActionConfirmModal | null>(null);
+    const [dataAddPlayer, setDataAddPlayer] = useState<Omit<Player, "id">>({
+        name: "",
+        address: "",
+        health: 0,
+        strength: 0,
+    });
 
     useEffect(() => {
         const dataPlayers = localStorage.getItem("data-players");
@@ -113,16 +119,122 @@ const HomePage = () => {
         if (action === "delete") {
             updatedPlayers = players.filter((player) => player.id !== data.id);
         }
+        else if (action === "create") {
+            updatedPlayers = [
+                ...players,
+                {
+                    id: String(players.length + 1),
+                    ...dataAddPlayer,
+                },
+            ];
+            setDataAddPlayer({
+                name: "",
+                address: "",
+                health: 0,
+                strength: 0,
+            });
+        }
 
         setShowModal(null);
         setPlayers(updatedPlayers);
         localStorage.setItem("data-players", JSON.stringify(updatedPlayers));
     };
 
+    const handleChangeDataAdd = (e: ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = e.target;
+        setDataAddPlayer((prevData) => ({ ...prevData, [name]: value }));
+    };
+
     return (
         <div className="py-10">
             <Wallet>
                 <div>
+                <div className="mb-4">
+                        <div className="mb-4">
+                            <label
+                                htmlFor="name"
+                                className="block mb-1 font-medium text-left"
+                            >
+                                Tên Player
+                            </label>
+                            <input
+                                type="text"
+                                id="name"
+                                name="name"
+                                value={dataAddPlayer.name}
+                                placeholder="Tên Player"
+                                className="border p-2 rounded w-full mb-2"
+                                onChange={handleChangeDataAdd}
+                            />
+                        </div>
+
+                        <div className="mb-4">
+                            <label
+                                htmlFor="address"
+                                className="block mb-1 font-medium text-left"
+                            >
+                                Địa chỉ Player
+                            </label>
+                            <input
+                                type="text"
+                                id="address"
+                                name="address"
+                                value={dataAddPlayer.address}
+                                placeholder="Địa chỉ Player"
+                                className="border p-2 rounded w-full mb-2"
+                                onChange={handleChangeDataAdd}
+                            />
+                        </div>
+
+                        <div className="mb-4">
+                            <label
+                                htmlFor="health"
+                                className="block mb-1 font-medium text-left"
+                            >
+                                Sức khỏe
+                            </label>
+                            <input
+                                type="number"
+                                id="health"
+                                name="health"
+                                value={dataAddPlayer.health}
+                                placeholder="Sức khỏe"
+                                className="border p-2 rounded w-full mb-2"
+                                onChange={handleChangeDataAdd}
+                            />
+                        </div>
+
+                        <div className="mb-4">
+                            <label
+                                htmlFor="strength"
+                                className="block mb-1 font-medium text-left"
+                            >
+                                Sức mạnh
+                            </label>
+                            <input
+                                type="number"
+                                id="strength"
+                                name="strength"
+                                value={dataAddPlayer.strength}
+                                placeholder="Sức mạnh"
+                                className="border p-2 rounded w-full mb-2"
+                                onChange={handleChangeDataAdd}
+                            />
+                        </div>
+
+                        <button
+                            onClick={() =>
+                                handleActionPlayer({
+                                    action: "create",
+                                    ...dataAddPlayer,
+                                    id: "",
+                                })
+                            }
+                            className="w-full bg-blue-500 text-white p-2 rounded mt-2"
+                        >
+                            Thêm Player
+                        </button>
+                    </div>
                     <h1 className="text-2xl font-bold mb-4">
                         Danh sách Player
                     </h1>
