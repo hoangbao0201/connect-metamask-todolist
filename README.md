@@ -1,40 +1,17 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Metamask-Connected ToDo List with Player Management
 
-## Getting Started
+This project is a Next.js application that integrates with Metamask for authentication and includes a comprehensive To-Do List interface for managing players. The app allows users to add, edit, delete, and view player information, which is stored locally using `localStorage`.
 
-First, run the development server:
+## Features
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+The player management interface supports the following functions:
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- **Connect Metamask**: Led by [Nguyễn Hoàng Bảo](https://github.com/hoangbao0201) in the `connect-metamask` branch, this feature enables users to connect their Metamask wallet to authenticate and access the application.
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+- **Create Player**: Implemented by [Nguyễn Văn Duy](https://github.com/DuyNguyen555) in the `create-player` branch, this feature allows users to create new player entries.
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+- **Show Player**: Developed by [Trịnh Thế Nhật](https://github.com/TheNhatJS) in the `show-player` branch, this functionality displays a list of all players.
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+- **Edit Player**: Built by [Trình Xuân Lộc](https://github.com/TXLoc-30) in the `edit-player` branch, this feature allows users to edit existing player information.
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+- **Delete Player**: Created by [Hồ Công Thành](https://github.com/ThanhHo2205) in the `delete-player` branch, this function enables users to delete specific players from the list.
