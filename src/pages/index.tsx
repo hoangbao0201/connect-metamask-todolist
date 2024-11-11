@@ -134,6 +134,11 @@ const HomePage = () => {
                 strength: 0,
             });
         }
+        else if (action === "edit") {
+            updatedPlayers = players.map((player) =>
+                player.id === data.id ? { ...player, ...dataAction } : player
+            );
+        }
 
         setShowModal(null);
         setPlayers(updatedPlayers);
@@ -285,6 +290,17 @@ const HomePage = () => {
                                         </td>
                                         <td className="px-4 py-2 text-center">
                                             <button
+                                                className="bg-yellow-500 text-white px-3 py-1 rounded-md hover:bg-yellow-600"
+                                                onClick={() =>
+                                                    setShowModal({
+                                                        action: "edit",
+                                                        ...player,
+                                                    })
+                                                }
+                                            >
+                                                Sửa
+                                            </button>
+                                            <button
                                                 className="bg-red-500 text-white px-3 py-1 rounded-md hover:bg-red-600 ml-2"
                                                 onClick={() =>
                                                     setShowModal({
@@ -302,13 +318,13 @@ const HomePage = () => {
                         </table>
                     </div>
                 </div>
-                {showModal?.action === "delete" && (
+                {showModal?.action && (
                     <Modal
                         data={showModal}
-                        title="Xóa Player"
+                        title={`${showModal?.action === "delete" ? "Xóa" : "Chỉnh sửa"} Player`}
                         onConfirm={handleActionPlayer}
                         onCancel={() => setShowModal(null)}
-                        message={`Bạn muốn xóa player "${showModal?.name}"?`}
+                        message={`${showModal?.action === "delete" ? "Bạn muốn xóa player" : "Bạn muốn chỉnh sửa thông tin của player"} ${showModal?.name}?`}
                     />
                 )}
             </Wallet>
@@ -345,6 +361,82 @@ const Modal: React.FC<ModalProps> = ({
             <div className="bg-white p-4 rounded w-[500px]">
                 <h2 className="text-xl font-bold">{title}</h2>
                 <p>{message}</p>
+
+                {data?.action === "edit" && (
+                    <div>
+                        <div className="mb-4">
+                            <label
+                                htmlFor="nameUpdate"
+                                className="block mb-1 font-medium text-left"
+                            >
+                                Tên
+                            </label>
+                            <input
+                                type="text"
+                                id="nameUpdate"
+                                placeholder="Tên"
+                                value={name}
+                                onChange={(e) => setName(e.target.value)}
+                                className="border p-2 rounded w-full mb-2"
+                            />
+                        </div>
+
+                        <div className="mb-4">
+                            <label
+                                htmlFor="addressUpdate"
+                                className="block mb-1 font-medium text-left"
+                            >
+                                Địa chỉ
+                            </label>
+                            <input
+                                type="text"
+                                id="addressUpdate"
+                                placeholder="Địa chỉ"
+                                value={address}
+                                onChange={(e) => setAddress(e.target.value)}
+                                className="border p-2 rounded w-full mb-2"
+                            />
+                        </div>
+
+                        <div className="mb-4">
+                            <label
+                                htmlFor="healthUpdate"
+                                className="block mb-1 font-medium text-left"
+                            >
+                                Sức khỏe
+                            </label>
+                            <input
+                                type="number"
+                                id="healthUpdate"
+                                placeholder="Sức khỏe"
+                                value={health}
+                                onChange={(e) =>
+                                    setHealth(Number(e.target.value))
+                                }
+                                className="border p-2 rounded w-full mb-2"
+                            />
+                        </div>
+
+                        <div className="mb-4">
+                            <label
+                                htmlFor="strengthUpdate"
+                                className="block mb-1 font-medium text-left"
+                            >
+                                Sức mạnh
+                            </label>
+                            <input
+                                type="number"
+                                id="strengthUpdate"
+                                placeholder="Sức mạnh"
+                                value={strength}
+                                onChange={(e) =>
+                                    setStrength(Number(e.target.value))
+                                }
+                                className="border p-2 rounded w-full mb-2"
+                            />
+                        </div>
+                    </div>
+                )}
 
                 <div className="mt-2 flex justify-end">
                     <button
